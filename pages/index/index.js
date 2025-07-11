@@ -36,6 +36,9 @@ Page({
     temperature: '', // 温度
     weatherCondition: '', // 天气状况
     humidity: '', // 湿度
+    windSpeed: '', // 风速
+    windDirection: '', // 风向
+    windDirectionDegrees: 0, // 风向度数(用于箭头旋转)
     sunrise: '', // 日出时间
     sunset: '' // 日落时间
   },
@@ -71,7 +74,7 @@ Page({
           const longitude = location.longitude;
           
           // 使用获取的经纬度请求天气数据
-          const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weather_code,sunrise,sunset&current=temperature_2m,relative_humidity_2m&timezone=auto`;
+          const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weather_code,sunrise,sunset&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&timezone=auto`;
           
           wx.request({
             url: weatherUrl,
@@ -82,19 +85,34 @@ Page({
             success: function(res) {
               if (res.statusCode === 200) {
                 // 提取所需数据
-                // 格式化时间，只保留时间部分
+                // 改进时间格式化，转换为12小时制(上午/下午)
                 const formatTime = (isoTime) => {
-                  return isoTime.split('T')[1];
+                  const timeStr = isoTime.split('T')[1];
+                  const [hours, minutes] = timeStr.split(':');
+                  const hour = parseInt(hours);
+                  const period = hour >= 12 ? '下午' : '上午';
+                  const hour12 = hour % 12 || 12;
+                  return `${period} ${hour12}:${minutes}`;
                 };
                 
                 // 获取天气代码并转换为文字描述
                 const weatherCode = res.data.daily.weather_code[0];
                 const weatherCondition = weatherCodeMap[weatherCode] || '未知天气';
+                
+                // 将风向度数转换为方向文字
+                const getWindDirection = (degrees) => {
+                  const directions = ['北', '东北', '东', '东南', '南', '西南', '西', '西北'];
+                  const index = Math.round((degrees % 360) / 45) % 8;
+                  return directions[index] + ` (${degrees}°)`;
+                };
 
                 that.setData({
                   temperature: res.data.current.temperature_2m,
                   weatherCondition: weatherCondition,
                   humidity: res.data.current.relative_humidity_2m,
+                  windSpeed: res.data.current.wind_speed_10m + ' km/h',
+                  windDirection: getWindDirection(res.data.current.wind_direction_10m),
+                  windDirectionDegrees: res.data.current.wind_direction_10m,
                   sunrise: formatTime(res.data.daily.sunrise[0]),
                   sunset: formatTime(res.data.daily.sunset[0])
                 });

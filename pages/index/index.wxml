@@ -1,25 +1,46 @@
-<!-- pages/weatherDemo/weatherDemo.wxml -->
+<!-- pages/index/index.wxml -->
 <view class="container">
   <view class="input-container">
     <text>城市: </text>
     <input bindinput="onCityInput" placeholder="请输入城市名" value="{{city}}" />
   </view>
   <button bindtap="getWeather">获取天气</button>
+  
   <view class="weather-container">
-    <view class="weather-item">
-      <text>温度: {{temperature}} °C</text>
+    <view class="weather-header">
+      <text class="city-name">{{city}}</text>
+      <text class="weather-condition">{{weatherCondition}}</text>
     </view>
-    <view class="weather-item">
-      <text>天气状况: {{weatherCondition}}</text>
+    
+    <view class="weather-grid">
+      <view class="weather-card">
+        <text class="weather-label">温度</text>
+        <text class="weather-value">{{temperature}} °C</text>
+      </view>
+      <view class="weather-card">
+        <text class="weather-label">湿度</text>
+        <text class="weather-value">{{humidity}} %</text>
+      </view>
+      <view class="weather-card">
+        <text class="weather-label">风速</text>
+        <text class="weather-value">{{windSpeed}}</text>
+      </view>
+      <view class="weather-card wind-direction">
+        <text class="weather-label">风向</text>
+        <text class="weather-value">{{windDirection}}</text>
+        <text class="wind-arrow" style="transform: rotate({{windDirectionDegrees}}deg)">↑</text>
+      </view>
     </view>
-    <view class="weather-item">
-      <text>湿度: {{humidity}} %</text>
-    </view>
-    <view class="weather-item">
-      <text>日出: {{sunrise}}</text>
-    </view>
-    <view class="weather-item">
-      <text>日落: {{sunset}}</text>
+    
+    <view class="sun-times">
+      <view class="sun-time">
+        <text>日出</text>
+        <text class="time">{{sunrise}}</text>
+      </view>
+      <view class="sun-time">
+        <text>日落</text>
+        <text class="time">{{sunset}}</text>
+      </view>
     </view>
   </view>
 </view>
