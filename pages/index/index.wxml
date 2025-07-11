@@ -4,7 +4,10 @@
     <text>城市: </text>
     <input bindinput="onCityInput" placeholder="请输入城市名" value="{{city}}" />
   </view>
-  <button bindtap="getWeather">获取天气</button>
+  <view class="button-group">
+    <button bindtap="getWeather" class="city-button">获取城市天气</button>
+    <button bindtap="getLocationWeather" class="location-button">获取当前位置天气</button>
+  </view>
   
   <view class="weather-container">
     <view class="weather-header">
@@ -41,6 +44,11 @@
         <text>日落</text>
         <text class="time">{{sunset}}</text>
       </view>
+    </view>
+    
+    <view class="location-info">
+      <text>当前位置: </text>
+      <text>纬度 {{latitude}}, 经度 {{longitude}}</text>
     </view>
   </view>
 </view>

@@ -20,5 +20,13 @@
       "https://geocoding-api.open-meteo.com",
       "https://api.open-meteo.com"
     ]
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于获取当地天气信息"
+    }
   }
 }

@@ -40,8 +40,36 @@ Page({
     windDirection: '', // 风向
     windDirectionDegrees: 0, // 风向度数(用于箭头旋转)
     sunrise: '', // 日出时间
-    sunset: '' // 日落时间
+    sunset: '', // 日落时间
+    latitude: '', // 纬度
+    longitude: '' // 经度
   },
+  // 页面加载时获取位置
+  onLoad: function() {
+    this.getLocation();
+  },
+  
+  // 获取设备位置
+  getLocation: function() {
+    const that = this;
+    wx.getLocation({
+      type: 'wgs84',
+      success: function(res) {
+        that.setData({
+          latitude: res.latitude.toFixed(4),
+          longitude: res.longitude.toFixed(4)
+        });
+      },
+      fail: function(err) {
+        console.error('获取位置失败:', err);
+        wx.showToast({
+          title: '获取位置失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+  
   // 城市输入框事件
   onCityInput: function(e) {
     this.setData({
@@ -49,6 +77,7 @@ Page({
     });
   },
   // 获取天气数据
+  // 根据城市名称获取天气
   getWeather: function() {
     const that = this;
     const city = this.data.city;
@@ -143,6 +172,76 @@ Page({
       fail: function(err) {
         wx.showToast({
           title: '地理编码请求失败',
+          icon: 'none'
+        });
+        console.error('请求失败:', err);
+      }
+    });
+  },
+  
+  // 根据当前位置经纬度获取天气
+  getLocationWeather: function() {
+    const that = this;
+    const { latitude, longitude } = this.data;
+    
+    if (!latitude || !longitude) {
+      wx.showToast({
+        title: '无法获取当前位置',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weather_code,sunrise,sunset&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&timezone=auto`;
+    
+    wx.request({
+      url: weatherUrl,
+      method: 'GET',
+      header: {
+        'Content-Type': 'application/json'
+      },
+      success: function(res) {
+        if (res.statusCode === 200) {
+          const formatTime = (isoTime) => {
+            const timeStr = isoTime.split('T')[1];
+            const [hours, minutes] = timeStr.split(':');
+            const hour = parseInt(hours);
+            const period = hour >= 12 ? '下午' : '上午';
+            const hour12 = hour % 12 || 12;
+            return `${period} ${hour12}:${minutes}`;
+          };
+          
+          const weatherCode = res.data.daily.weather_code[0];
+          const weatherCondition = weatherCodeMap[weatherCode] || '未知天气';
+          
+          const getWindDirection = (degrees) => {
+            const directions = ['北', '东北', '东', '东南', '南', '西南', '西', '西北'];
+            const index = Math.round((degrees % 360) / 45) % 8;
+            return directions[index] + ` (${degrees}°)`;
+          };
+
+          that.setData({
+            temperature: res.data.current.temperature_2m,
+            weatherCondition: weatherCondition,
+            humidity: res.data.current.relative_humidity_2m,
+            windSpeed: res.data.current.wind_speed_10m + ' km/h',
+            windDirection: getWindDirection(res.data.current.wind_direction_10m),
+            windDirectionDegrees: res.data.current.wind_direction_10m,
+            sunrise: formatTime(res.data.daily.sunrise[0]),
+            sunset: formatTime(res.data.daily.sunset[0]),
+            city: '当前位置'
+          });
+        } else {
+          wx.showToast({
+            title: '获取天气失败',
+            icon: 'none'
+          });
+          console.error('API请求失败:', res);
+        }
+      },
+      fail: function(err) {
+        wx.showToast({
+          title: '天气请求失败',
           icon: 'none'
         });
         console.error('请求失败:', err);

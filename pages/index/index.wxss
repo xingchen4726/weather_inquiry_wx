@@ -17,14 +17,30 @@ input {
   border: 1px solid #ccc;
 }
 
-button {
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.city-button {
   background-color: #1aad19;
   color: white;
   padding: 12px;
   border-radius: 5px;
-  width: 100%;
   border: none;
   font-size: 16px;
+  flex: 1;
+}
+
+.location-button {
+  background-color: #10aeff;
+  color: white;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  flex: 1;
 }
 
 .weather-container {
