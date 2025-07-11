@@ -1,0 +1,25 @@
+<!-- pages/weatherDemo/weatherDemo.wxml -->
+<view class="container">
+  <view class="input-container">
+    <text>城市: </text>
+    <input bindinput="onCityInput" placeholder="请输入城市名" value="{{city}}" />
+  </view>
+  <button bindtap="getWeather">获取天气</button>
+  <view class="weather-container">
+    <view class="weather-item">
+      <text>温度: {{temperature}} °C</text>
+    </view>
+    <view class="weather-item">
+      <text>天气状况: {{weatherCondition}}</text>
+    </view>
+    <view class="weather-item">
+      <text>湿度: {{humidity}} %</text>
+    </view>
+    <view class="weather-item">
+      <text>日出: {{sunrise}}</text>
+    </view>
+    <view class="weather-item">
+      <text>日落: {{sunset}}</text>
+    </view>
+  </view>
+</view>
