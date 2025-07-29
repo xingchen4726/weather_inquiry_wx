@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="title">分时气温数据</view>
+  <scroll-view class="hourly-scroll" scroll-x="true">
+    <view class="hourly-container">
+      <view wx:for="{{temperatureData}}" wx:key="time" class="hourly-item">
+        <view class="hourly-time">{{item.time}}</view>
+        <view class="hourly-temp">{{item.temperature}}°C</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="title" style="margin-top: 30px;">分时降雨量(mm)</view>
+  <scroll-view class="hourly-scroll" scroll-x="true">
+    <view class="hourly-container">
+      <view wx:for="{{rainData}}" wx:key="time" class="hourly-item">
+        <view class="hourly-time">{{item.time}}</view>
+        <view class="hourly-rain">{{item.value}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="title" style="margin-top: 30px;">分时降水概率(%)</view>
+  <scroll-view class="hourly-scroll" scroll-x="true">
+    <view class="hourly-container">
+      <view wx:for="{{precipitationData}}" wx:key="time" class="hourly-item">
+        <view class="hourly-time">{{item.time}}</view>
+        <view class="hourly-precipitation">{{item.value}}</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

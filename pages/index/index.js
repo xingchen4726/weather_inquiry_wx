@@ -62,21 +62,30 @@ const fetchWeatherData = function(latitude, longitude, callback) {
           return directions[index] + ` (${degrees}°)`;
         };
 
-        // 处理分时温度数据
-        const hourlyData = [];
-        const hourlyTimes = res.data.hourly.time;
-        const hourlyTemps = res.data.hourly.temperature_2m;
-        
-        for (let i = 0; i < hourlyTimes.length; i++) {
-          const timeStr = hourlyTimes[i].split('T')[1];
+        // 处理分时数据系列
+        const hourlyTimes = res.data.hourly.time.map(time => {
+          const timeStr = time.split('T')[1];
           const [hour] = timeStr.split(':');
-          hourlyData.push({
-            time: `${hour}:00`,
-            temperature: hourlyTemps[i]
-          });
-        }
+          return `${hour}:00`;
+        });
         
-        callback({
+        const hourlyTemps = res.data.hourly.temperature_2m.map((temp, index) => ({
+          time: hourlyTimes[index],
+          value: temp
+        }));
+        
+        const hourlyRain = res.data.hourly.rain.map((rain, index) => ({
+          time: hourlyTimes[index],
+          value: rain
+        }));
+        
+        const hourlyPrecip = res.data.hourly.precipitation_probability.map((precip, index) => ({
+          time: hourlyTimes[index],
+          value: precip
+        }));
+
+        // 组装回调数据
+        const callbackData = {
           temperature: res.data.current.temperature_2m,
           weatherCondition: weatherCondition,
           humidity: res.data.current.relative_humidity_2m,
@@ -85,8 +94,12 @@ const fetchWeatherData = function(latitude, longitude, callback) {
           windDirectionDegrees: res.data.current.wind_direction_10m,
           sunrise: formatTime(res.data.daily.sunrise[0]),
           sunset: formatTime(res.data.daily.sunset[0]),
-          hourlyTemperatures: hourlyData
-        });
+          hourlyTemperatures: hourlyTemps,
+          hourlyRain: hourlyRain,
+          hourlyPrecip: hourlyPrecip
+        };
+        
+        callback(callbackData);
       } else {
         callback(null, {
           title: '获取天气失败',
@@ -229,5 +242,24 @@ Page({
         console.error(error.message);
       }
     });
+  },
+  
+  // 跳转到weather页面
+  navigateToWeather: function() {
+    const { hourlyTemperatures, hourlyRain, hourlyPrecip } = this.data;
+    if (hourlyTemperatures.length > 0) {
+      wx.navigateTo({
+        url: `/pages/weather/weather?tempData=${encodeURIComponent(JSON.stringify({
+          temperatures: hourlyTemperatures,
+          rain: hourlyRain,
+          precipitation: hourlyPrecip
+        }))}`
+      });
+    } else {
+      wx.showToast({
+        title: '请先获取天气数据',
+        icon: 'none'
+      });
+    }
   }
 });

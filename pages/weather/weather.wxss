@@ -1,0 +1,55 @@
+.container {
+  padding: 20px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.hourly-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.hourly-container {
+  display: inline-flex;
+  padding: 10px 0;
+}
+
+.hourly-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px;
+  margin-right: 10px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hourly-time {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.hourly-temp {
+  font-size: 16px;
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.hourly-rain {
+  font-size: 16px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.hourly-precipitation {
+  font-size: 16px;
+  font-weight: bold;
+  color: #9b59b6;
+}
