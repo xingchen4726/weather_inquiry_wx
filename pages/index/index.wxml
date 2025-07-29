@@ -50,5 +50,10 @@
       <text>当前位置: </text>
       <text>纬度 {{latitude}}, 经度 {{longitude}}</text>
     </view>
+    
+    <!-- 分时温度区域 -->
+    <block wx:for="{{hourlyTemperatures}}" wx:key="time">
+      <text>{{item.time}} {{item.temperature}}°</text>
+    </block>
   </view>
 </view>

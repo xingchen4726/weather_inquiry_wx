@@ -122,3 +122,49 @@ input {
   display: block;
   margin-top: 5px;
 }
+
+/* 分时温度区域样式 */
+.hourly-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.hourly-scroll {
+  width: 100%;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+.hourly-container {
+  display: inline-flex;
+}
+
+.hourly-item {
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-right: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.hourly-time {
+  font-size: 14px;
+  color: #666;
+}
+
+.hourly-temp {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+}
